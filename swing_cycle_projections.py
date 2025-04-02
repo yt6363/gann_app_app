@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import bisect
 import math
-import io
 import plotly.graph_objects as go
+from streamlit_plotly_events import plotly_events
 
 # Helper functions
 def generate_cycle_levels(start=1.0, max_price=1e9):
@@ -94,7 +94,6 @@ def main():
         swings_df['CyclePosition'] = swings_df['CycleFraction'].apply(get_cycle_label)
 
         fig = go.Figure()
-
         fig.add_trace(go.Scatter(x=plot_df["Date"], y=plot_df["High"], mode='lines', name='Price', line=dict(color='royalblue')))
 
         fig.add_trace(go.Scatter(
@@ -108,19 +107,15 @@ def main():
             name="Swings"
         ))
 
-        fig.update_layout(
-            title="Swing & Cycle Projections",
-            hovermode='x unified',
-            uirevision='fixed',
-            height=600,
-            margin=dict(l=20, r=20, t=40, b=20)
-        )
+        fig.update_layout(title="Swing & Cycle Projections", hovermode='closest', height=600)
 
-        st.plotly_chart(fig, use_container_width=True)
+        selected_points = plotly_events(fig, click_event=True, select_event=False)
 
-        # Optionally show swings data for debugging
-        with st.expander("See swing data"):
-            st.dataframe(swings_df)
+        if selected_points:
+            selected_point = selected_points[0]
+            st.write(f"Selected Swing Date: {selected_point['x']}, Price: {selected_point['y']}")
+            projected_price = selected_point['y'] * 1.05
+            st.write(f"Projected Next Swing Price (5% move): {projected_price:.2f}")
 
 if __name__ == "__main__":
     main()
