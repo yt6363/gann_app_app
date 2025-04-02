@@ -16,3 +16,8 @@ PyDrive2
 firebase-admin
 python-dotenv
 requests
+streamlit
+pandas
+numpy
+plotly
+streamlit-plotly-events
