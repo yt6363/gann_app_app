@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Jupiter SaaS Login</title>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+  <script>
+    console.log("Firebase object:", firebase);
+  </script>
+  <!-- Custom CSS for Orange Theme -->
+  <style>
+    body {
+      background-color: #fff3e0; /* light orange background */
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .header {
+      background-color: #ff9800; /* orange */
+      color: white;
+      padding: 20px 0;
+      font-size: 2em;
+      font-weight: bold;
+    }
+    .content {
+      margin-top: 50px;
+    }
+    .btn {
+      background-color: #ff9800;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #fb8c00;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Jupiter SaaS</div>
+  <div class="content">
+    <h2>Login with Google</h2>
+    <button class="btn" onclick="signIn()">Sign In</button>
+  </div>
+
+  <script>
+    // Your Firebase configuration (from your Firebase console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfuuW-3z0rgI2bfuRImDi0DVL6tcM-HOA",
+      authDomain: "jupiter-beab6.firebaseapp.com",
+      projectId: "jupiter-beab6",
+      storageBucket: "jupiter-beab6.firebasestorage.app",
+      messagingSenderId: "142467784972",
+      appId: "1:142467784972:web:c62e393628b70e8348e929"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    function signIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => result.user.getIdToken())
+        .then((token) => {
+          // Redirect to your Cloud Run app with the token as a query parameter
+          window.location.href = "https://gann-app-142467784972.us-central1.run.app?token=" + token;
+        })
+        .catch((error) => {
+          console.error("Login error:", error);
+          alert("Login failed: " + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
